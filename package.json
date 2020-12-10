@@ -20,5 +20,8 @@
   "bugs": {
     "url": "https://github.com/RamiroMendozaA/wheather-CLI/issues"
   },
-  "homepage": "https://github.com/RamiroMendozaA/wheather-CLI#readme"
+  "homepage": "https://github.com/RamiroMendozaA/wheather-CLI#readme",
+  "dependencies": {
+    "inquirer": "^7.3.3"
+  }
 }
