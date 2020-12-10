@@ -1,0 +1,24 @@
+{
+  "name": "wheather-cli",
+  "version": "1.0.0",
+  "description": "A simple CLI to check the wheather in Dallas, Tx.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RamiroMendozaA/wheather-CLI.git"
+  },
+  "keywords": [
+    "wheater",
+    "dallas",
+    "texas"
+  ],
+  "author": "Ramiro Mendoza",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RamiroMendozaA/wheather-CLI/issues"
+  },
+  "homepage": "https://github.com/RamiroMendozaA/wheather-CLI#readme"
+}
