@@ -1,5 +1,6 @@
 'use strict';
 const axios = require('axios');
+const generate = require('csv-generate');
 const inquirer = require('inquirer');
 const { wheatherKey } = require('./Key.json');
 
@@ -21,24 +22,30 @@ const questions = [
   }
 ];
 
+const getWheather = async (params = {}) => {
+  let response = {};
+  try {
+    response = await axios.get('https://api.openweathermap.org/data/2.5/weather', {
+      params,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+
+  return response.data;
+}
+
 inquirer.prompt(questions)
-  .then(answers => {
+  .then(async answers => {
       const {city, degrees} = answers || {};
       const units = (degrees === 'Farenheit') ? 'imperial' : 'metric';
+      const params = {
+        q: city,
+        APPID: wheatherKey,
+        units,
+      }
 
-      axios.get('http://api.openweathermap.org/data/2.5/weather', {
-        params: {
-          q: city,
-          APPID: wheatherKey,
-          units
-        }
-      })
-      .then(response => {
-        console.log(JSON.stringify(response, null, '  '));
-        console.log('respouesta');
-        // todo Export the response into a csv
-      }).catch(error => {
-        console.log(JSON.stringify(error, null, '  '));
-        console.log('error');
-      });
+      const response = await getWheather(params);
+
+      console.log(response);
   });
