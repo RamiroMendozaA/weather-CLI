@@ -4,7 +4,7 @@
   "description": "A simple CLI to check the wheather in Dallas, Tx.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "cli": "node index"
   },
   "repository": {
     "type": "git",
