@@ -33,28 +33,55 @@ const getWeather = async (params = {}) => {
   }
 
   return response.data;
-}
+};
+
+const writeCSVFile = (fileName = '', fileContent = '') => {
+  let count = 1;
+
+  let newFile = false;
+
+  if (!fs.existsSync(`${fileName}.csv`)) {
+    fs.writeFileSync(`${fileName}.csv`, fileContent);
+  } else {
+    while (!newFile) {
+      if (fs.existsSync(`${fileName}(${count}).csv`)) count += 1;
+      else {
+        fs.writeFileSync(`${fileName}(${count}).csv`, fileContent);
+        
+        newFile = true;
+      }
+    }
+  }
+
+  return `The Csv file has been saved into the root of this project.`;
+};
 
 inquirer.prompt(questions)
   .then(async answers => {
-      const {city, degrees} = answers || {};
-      const units = (degrees === 'Farenheit') ? 'imperial' : 'metric';
-      const params = {
-        q: city,
-        APPID: weatherKey,
-        units,
-      }
+    const { city, degrees } = answers || {};
+    if (!city) throw new Error('The city field is required');
+    if (!degrees) throw new Error('A unit needs to be selected');
 
-      const response = await getWeather(params);
-      const weatherOutput = {
-        temperature: response.main.temp,
-        unit: degrees,
-        rain: response.weather[0].main === 'Rain',
-      }
-      const headers = Object.keys(weatherOutput).map(header => header);
-      const values = Object.values(weatherOutput).map(values => values);
-      
-      fs.writeFileSync(`${city}-wheater-today.csv`, `${headers}\n${values}`);
+    const units = (degrees === 'Farenheit') ? 'imperial' : 'metric';
+    const params = {
+      q: city,
+      APPID: weatherKey,
+      units,
+    }
 
-      console.log(`The Csv file has been saved into the root of this project with the folowing name: ${city}-wheater-today.csv`)
+    const response = await getWeather(params);
+    const weatherOutput = {
+      temperature: response.main.temp,
+      unit: degrees,
+      rain: response.weather[0].main === 'Rain',
+    }
+    const headers = Object.keys(weatherOutput).map(header => header);
+    const values = Object.values(weatherOutput).map(values => values);
+
+    let fileName = `${city}-wheater-today`;
+    const fileContent = `${headers}\n${values}`;
+
+    const message = writeCSVFile(fileName, fileContent);
+
+    console.log(message);
   });
