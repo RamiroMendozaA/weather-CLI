@@ -1,8 +1,8 @@
 'use strict';
 const axios = require('axios');
-const generate = require('csv-generate');
+const fs = require('fs');
 const inquirer = require('inquirer');
-const { wheatherKey } = require('./Key.json');
+const { weatherKey } = require('./Key.json');
 
 const questions = [
   {
@@ -22,7 +22,7 @@ const questions = [
   }
 ];
 
-const getWheather = async (params = {}) => {
+const getWeather = async (params = {}) => {
   let response = {};
   try {
     response = await axios.get('https://api.openweathermap.org/data/2.5/weather', {
@@ -41,11 +41,20 @@ inquirer.prompt(questions)
       const units = (degrees === 'Farenheit') ? 'imperial' : 'metric';
       const params = {
         q: city,
-        APPID: wheatherKey,
+        APPID: weatherKey,
         units,
       }
 
-      const response = await getWheather(params);
+      const response = await getWeather(params);
+      const weatherOutput = {
+        temperature: response.main.temp,
+        unit: degrees,
+        rain: response.weather[0].main === 'Rain',
+      }
+      const headers = Object.keys(weatherOutput).map(header => header);
+      const values = Object.values(weatherOutput).map(values => values);
+      
+      fs.writeFileSync(`${city}-wheater-today.csv`, `${headers}\n${values}`);
 
-      console.log(response);
+      console.log(`The Csv file has been saved into the root of this project with the folowing name: ${city}-wheater-today.csv`)
   });
